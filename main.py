@@ -133,10 +133,10 @@ async def on_ready():
     if firstboot == 1:
         pass
     else:
-        print(colored("―――――――――――――――", "blue"))  # |
-        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
-        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
-        print(colored("―――――――――――――――", "blue"))  # |
+        print(colored("―――――――――――――――", "blue"))                           # |
+        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))    # | Sends Bot branding to console
+        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))        # | and sends version info
+        print(colored("―――――――――――――――", "blue"))                           # |
     print()
     cprint('⚙️Accepting Commands', 'blue')  # Sends in console that the bot is now excepting discord commands
     """
