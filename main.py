@@ -32,10 +32,10 @@ else:
     with open(os.getcwd() + "/config.json", "w+") as f:
         json.dump(configTemplate, f)
 
-    print(colored("―――――――――――――――", "blue"))                            # |
-    print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))     # | Sends Bot branding to console
-    print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))        # | and sends version info
-    print(colored("―――――――――――――――", "blue"))                            # |
+    print(colored("―――――――――――――――", "blue"))  # |
+    print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
+    print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
+    print(colored("―――――――――――――――", "blue"))  # |
     print()
     cprint('⚙️Beginning First Boot Setup', 'blue')  # Sends in console that the bot is beginning first time setup
     time.sleep(randint(0, 3))  # Pause For Effect
@@ -44,7 +44,6 @@ else:
     with open("./config.json") as f:
         configData = json.load(f)
     firstboot = 1
-
 
 if os.path.exists(os.getcwd() + "/icons.json"):
     with open("./icons.json") as f:
@@ -102,14 +101,15 @@ intents.members = True
 
 bot = commands.Bot(command_prefix=[configData["Prefix"], "/"], intents=intents)
 
-if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData["Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
+if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
+    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
     if firstboot == 1:
         pass
     else:
-        print(colored("―――――――――――――――", "blue"))                            # |
-        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))     # | Sends Bot branding to console
-        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))        # | and sends version info
-        print(colored("―――――――――――――――", "blue"))                            # |
+        print(colored("―――――――――――――――", "blue"))  # |
+        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
+        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
+        print(colored("―――――――――――――――", "blue"))  # |
     print()
     print(colored("――――――――――――――――", "blue"))
     print(colored("》", "blue"), "   Error Handling   ", colored("《", "blue"))
@@ -126,15 +126,17 @@ else:
 """
 All events ran on startup
 """
+
+
 @bot.event
 async def on_ready():
     if firstboot == 1:
         pass
     else:
-        print(colored("―――――――――――――――", "blue"))                            # |
-        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))     # | Sends Bot branding to console
-        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))        # | and sends version info
-        print(colored("―――――――――――――――", "blue"))                            # |
+        print(colored("―――――――――――――――", "blue"))  # |
+        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
+        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
+        print(colored("―――――――――――――――", "blue"))  # |
     print()
     cprint('⚙️Accepting Commands', 'blue')  # Sends in console that the bot is now excepting discord commands
     """
@@ -158,11 +160,14 @@ async def on_ready():
     cprint('⚙️Syncing Commands', 'blue')
     await sync_all_commands(bot)
 
+
 """
 Resyncs all commands for the bot.
 this command is only executable by the bot developer (me)
 and is used for debugging purposes only
 """
+
+
 @bot.command()
 async def resync(ctx):
     if ctx.message.author.id == 642729210368098324:
@@ -201,7 +206,7 @@ async def weather(ctx, location):
                 """
                 Sends an error handling message if there is an error with the API call
                 Added mainly to catch the error sent when the APIs limit of 50 calls per day has been reached
-                
+
                 This section also sends a discord embed to the player informing them of the error,
                 telling them (Or The Developer) to check console and providing an error code
                 """
@@ -242,32 +247,32 @@ async def weather(ctx, location):
                 wsd = wdr["Wind"]["Direction"]["English"]  # Wind Speed Direction
                 gsi = wdr["WindGust"]["Speed"]["Imperial"]["Value"]  # Wind Gusts Imperial
                 gsm = wdr["WindGust"]["Speed"]["Imperial"]["Value"]  # Wind Gusts Metric
-                lube = wdr["LocalObservationDateTime"].split("T")   # |
-                lube = lube[1].split("+")                           # | Gets Last Update Time In Readable Form
-                lube = lube[0].split(":")                           # |
-                if int(lube[0]) > 12:               # |
-                    lube[0] = int(lube[0]) - 12     # |
-                    lube.append("PM")               # | Converts The 24 Hour Time To 12 Hour And Appends AM or PM
-                else:                               # |
-                    lube.append("AM")               # |
+                lube = wdr["LocalObservationDateTime"].split("T")  # |
+                lube = lube[1].split("+")  # | Gets Last Update Time In Readable Form
+                lube = lube[0].split(":")  # |
+                if int(lube[0]) > 12:  # |
+                    lube[0] = int(lube[0]) - 12  # |
+                    lube.append("PM")  # | Converts The 24 Hour Time To 12 Hour And Appends AM or PM
+                else:  # |
+                    lube.append("AM")  # |
 
-                if tempc <= 5 or tempf <= 41:       # |
-                    hoc = icondata["31"]            # |
-                else:                               # |
-                    hoc = icondata["30"]            # | Checks To See If The Temperature is below 5°C or 41°F
-                if tempcr <= 5 or tempfr <= 41:     # | Then Sets The Thermometer Emoji To Either Hot Or Cold
-                    hocr = icondata["31"]           # |
-                else:                               # |
-                    hocr = icondata["30"]           # |
+                if tempc <= 5 or tempf <= 41:  # |
+                    hoc = icondata["31"]  # |
+                else:  # |
+                    hoc = icondata["30"]  # | Checks To See If The Temperature is below 5°C or 41°F
+                if tempcr <= 5 or tempfr <= 41:  # | Then Sets The Thermometer Emoji To Either Hot Or Cold
+                    hocr = icondata["31"]  # |
+                else:  # |
+                    hocr = icondata["30"]  # |
 
-                if wdr["WeatherIcon"] < 10:             # |
-                    pfx = f'0{wdr["WeatherIcon"]}'      # | Pre Formatting For Next Section
-                else:                                   # | Adds A Zero Before Single Digit Emoji IDs
+                if wdr["WeatherIcon"] < 10:  # |
+                    pfx = f'0{wdr["WeatherIcon"]}'  # | Pre Formatting For Next Section
+                else:  # | Adds A Zero Before Single Digit Emoji IDs
                     pfx = f'{str(wdr["WeatherIcon"])}'  # |
 
-                icl = icondata[str(wdr["WeatherIcon"])]                         # |
-                icl = icl.removeprefix(f'<:{pfx}:')                             # | Converts A Discord Emoji To A PNG
-                icl = icl.replace(">", "")                                      # | For The Embed ThumbNail
+                icl = icondata[str(wdr["WeatherIcon"])]  # |
+                icl = icl.removeprefix(f'<:{pfx}:')  # | Converts A Discord Emoji To A PNG
+                icl = icl.replace(">", "")  # | For The Embed ThumbNail
                 icl = f'https://cdn.discordapp.com/emojis/{icl}.png?size=2048'  # |
                 # END OF INFO GATHERING #
 
@@ -294,6 +299,7 @@ async def weather(ctx, location):
                 checking for the reaction being added to the embed message by the player
                 with a timeout of 30 second.
                 """
+
                 def check(reaction, user):
                     return user == ctx.message.author and reaction.message.author.bot
 
