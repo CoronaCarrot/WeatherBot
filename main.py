@@ -101,6 +101,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(command_prefix=[configData["Prefix"], "/"], intents=intents)
+bot.remove_command("help")
 
 if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
                             "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
