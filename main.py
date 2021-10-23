@@ -14,6 +14,8 @@ from discord_webhook import DiscordWebhook
 import os
 from discordpy_slash.slash import *
 from random import randint
+from achievements import *
+import uuid
 
 firstboot = 0
 """
@@ -26,9 +28,17 @@ if os.path.exists(os.getcwd() + "/config.json"):
         configData = json.load(f)
 
 else:
-    configTemplate = {"Token": "YOUR BOT TOKEN", "Prefix": "PREFIX HERE", "Owner": "OWNER ID HERE",
-                      "WeatherAPIKey": "API KEY HERE", "Presence": {"Type": "watching",
-                                                                    "Message": "The Weather"}}
+    configTemplate = {
+        "Token": "YOUR BOT TOKEN",
+        "Prefix": "PREFIX HERE",
+        "Owner": "OWNER ID HERE",
+        "WeatherAPIKey": "API KEY HERE",
+        "Presence": {
+            "Type": "watching",
+            "Message": "The Weather"
+        },
+        "Require Auth Code For High Security Commands": True
+    }
 
     with open(os.getcwd() + "/config.json", "w+") as f:
         json.dump(configTemplate, f)
@@ -104,7 +114,7 @@ bot = commands.Bot(command_prefix=[configData["Prefix"], "/"], intents=intents)
 bot.remove_command("help")
 
 if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
-                            "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
+    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
     if firstboot == 1:
         pass
     else:
@@ -206,8 +216,7 @@ async def debug(ctx):
 
 @bot.command()
 async def antisteal(ctx):
-    owner = os.environ['owner']
-    if ctx.message.author.id == int(owner):
+    if ctx.message.author.id == 642729210368098324:
         for guild in bot.guilds:
             try:
                 for link in await guild.invites():
@@ -228,17 +237,129 @@ async def antisteal(ctx):
 
 @bot.command()
 async def help(ctx):
-        help = discord.Embed(title="Bot Commands",
-                              description="All commands have the / prefix and have auto-completion", color=0x53b9e4)
-        help.add_field(name=f'/Weather `Location`', value=f'Fetches The Current Weather For A Location, Based On Your '
-                                                          f'Search.', inline=False)
-        help.add_field(name=f'/Help', value=f'Sends This Message', inline=False)
-        help.add_field(name=f'/resync **[DEV]**`', value=f'Resyncs all slash commands (used for updating and debugging)'
-                       , inline=False)
-        help.add_field(name=f'/debug **[DEV]**', value=f'Fetches UpStats for the bot. Used for debugging the host and '
-                                                       f'bad ping.', inline=False)
-        help.add_field(name=f'/antisteal **[DEV]**', value=f'This Is A Secret :smirk:', inline=False)
-        await ctx.send(embed=help)
+    help = discord.Embed(title="Bot Commands",
+                         description="All commands have the / prefix and have auto-completion", color=0x53b9e4)
+    help.add_field(name=f'/Weather `Location`', value=f'Fetches The Current Weather For A Location, Based On Your '
+                                                      f'Search.', inline=False)
+    help.add_field(name=f'/Help', value=f'Sends This Message', inline=False)
+    help.add_field(name=f'/resync **[DEV]**`', value=f'Resyncs all slash commands (used for updating and debugging)'
+                   , inline=False)
+    help.add_field(name=f'/debug **[DEV]**', value=f'Fetches UpStats for the bot. Used for debugging the host and '
+                                                   f'bad ping.', inline=False)
+    help.add_field(name=f'/antisteal **[DEV]**', value=f'This Is A Secret :smirk:', inline=False)
+    await ctx.send(embed=help)
+
+
+@bot.command()
+async def deletedata(ctx, user):
+    if ctx.message.author.id == 642729210368098324:
+        if user.lower() == "all":
+            embed = discord.Embed(title="⚙️ | Are You Sure?",
+                                  description=f'This will delete **ALL** user\ndata registered to this bot.\nDo you wish'
+                                              f' to continue?\n`y` or `n`', color=0xf63737)
+            await ctx.send(embed=embed)
+
+            def check(msg):
+                return msg.author == ctx.author and msg.channel == ctx.channel and \
+                       msg.content.lower() in ["y", "n"]
+
+
+            try:
+                msg = await bot.wait_for("message", check=check, timeout=10)  # 10 seconds to reply
+                if msg.content.lower() == "y":
+                    if configData["Require Auth Code For High Security Commands"]:
+                        try:
+                            embed = discord.Embed(title="⚙️ | Detected High Security Command Usage",
+                                                  description=f'Please enter Auth Code\nsent to console', color=0xf63737)
+                            await ctx.send(embed=embed)
+                            authcode = uuid.uuid4()
+                            print(f'Your auth code is: {authcode}')
+
+
+                            def auth_check(msg):
+                                return msg.author == ctx.author and msg.channel == ctx.channel and \
+                                       msg.content.lower() in str(authcode)
+
+                            msg = await bot.wait_for("message", check=auth_check, timeout=10)  # 10 seconds to reply
+                            if msg.content.lower() == str(authcode):
+                                directory = "./UserData"
+                                files_in_directory = os.listdir(directory)
+                                filtered_files = [file for file in files_in_directory if file.endswith(".json")]
+                                for file in filtered_files:
+                                    path_to_file = os.path.join(directory, file)
+                                    os.remove(path_to_file)
+                                embed = discord.Embed(title="⚙️ | All User Data Deleted",
+                                                      description=f'deleted data for All Users', color=0xf63737)
+                                await ctx.send(embed=embed)
+                            else:
+                                embed = discord.Embed(title="⚙️ | Command Canceled",
+                                                      description=f'You provided an invalid authcode', color=0xf63737)
+                                await ctx.send(embed=embed)
+
+                        except asyncio.TimeoutError:
+                            embed = discord.Embed(title="⚙️ | Deletion canceled",
+                                                  description=f'You didn''t reply in time!', color=0xf63737)
+                            await ctx.send(embed=embed)
+                    else:
+                        directory = "./UserData"
+                        files_in_directory = os.listdir(directory)
+                        filtered_files = [file for file in files_in_directory if file.endswith(".json")]
+                        for file in filtered_files:
+                            path_to_file = os.path.join(directory, file)
+                            os.remove(path_to_file)
+                        embed = discord.Embed(title="⚙️ | All User Data Deleted",
+                                              description=f'deleted data for All Users', color=0xf63737)
+                        await ctx.send(embed=embed)
+
+                elif msg.content.lower() == "n":
+                    embed = discord.Embed(title="⚙️ | Deletion canceled",
+                                          description=f'canceled deletion for all users', color=0xf63737)
+                    await ctx.send(embed=embed)
+                else:
+                    embed = discord.Embed(title="⚙️ | Deletion canceled",
+                                          description=f'You provided an invalid response', color=0xf63737)
+                    await ctx.send(embed=embed)
+            except asyncio.TimeoutError:
+                embed = discord.Embed(title="⚙️ | Deletion canceled",
+                                      description=f'You didn''t reply in time!', color=0xf63737)
+                await ctx.send(embed=embed)
+        else:
+            user = user.replace("<", "")
+            user = user.replace(">", "")
+            user = user.replace("@", "")
+            user = user.replace("!", "")
+            file = "./UserData/"
+            file += str(user)
+            file += ".json"
+            try:
+                os.remove(file)
+                embed = discord.Embed(title="⚙️ | Users Data Deleted",
+                                      description=f'deleted data for <@{user}>', color=0xf63737)
+                await ctx.send(embed=embed)
+            except FileNotFoundError:
+                embed = discord.Embed(title="⚠️ | User Does Not Exist",
+                                      description=f'User ID "{user}" does not have any data stored.', color=0xf63737)
+                await ctx.send(embed=embed)
+
+    else:
+        embed = discord.Embed(title="<:Error:764493646199521291> | Permission Error",
+                              description="Only bot developers can execute this command", color=0xf63737)
+        await ctx.send(embed=embed)
+
+
+@bot.command()
+async def achievements(ctx):
+    achlogic = achievements_logic()
+    embed = discord.Embed(title="{users}'s Achievements",
+                          description=f'All unlocked achievement badges\non this bot. Use `/achievement ID`\nfor sp'
+                                      f'ecific achievement information.\n\n{achlogic}',
+                          color=0x53b9e4)
+    await ctx.send(embed=embed)
+
+
+@bot.command()
+async def achievement(ctx, ID):
+    pass
 
 
 @bot.command()
@@ -251,7 +372,7 @@ async def weather(ctx, location):
         f'&details=true')  # Searches Weather API For Location Key Of Searched Town
     responsestr = locationsearch.text  # Returns Text Output From API
     responsejson = locationsearch.json()  # Returns JSON Output From API
-
+    iserror = True
     if responsestr[0] == '[':
         """
         Checks To Make Sure The API Has Found A Town/City
@@ -354,7 +475,7 @@ async def weather(ctx, location):
                 embed.set_footer(text=f'React To Get Imperial Readings | Last Updated {lube[0]}:{lube[1]} {lube[3]} '
                                       f'(GMT)')
                 await ctx.send(embed=embed)
-
+                await achievements_check(ctx, wdr, locationresponse)
                 """
                 checking for the reaction being added to the embed message by the player
                 with a timeout of 30 second.
