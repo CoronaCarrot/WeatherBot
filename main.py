@@ -2,9 +2,9 @@
 # demonstrates fetching from an API and using that information
 # in a discord bot environment.
 #
-# (C) 2021 Tyler McMullen, England
+# (C) 2021 CoronaCarrot
 # Released under GNU Public License (GPL)
-# email tyler.mcmullen.552@accesstomusic.ac.uk
+# email wae375@outlook.com
 # -----------------------------------------------------------
 """
 Module Imports
