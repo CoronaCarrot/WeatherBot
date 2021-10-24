@@ -9,15 +9,14 @@
 """
 Module Imports
 """
-from discord import Member
-from termcolor import cprint, colored
-from discord_webhook import DiscordWebhook
-import os
-from discordpy_slash.slash import *
-from random import randint
-from achievements import *
 import uuid
-from discord_components import DiscordComponents, Button, Select, SelectOption, ButtonStyle
+from random import randint
+
+from discord_components import DiscordComponents
+from discord_webhook import DiscordWebhook
+from termcolor import cprint, colored
+
+from achievements import *
 
 firstboot = 0
 """
@@ -256,6 +255,7 @@ async def help(ctx):
 @bot.command()
 async def deletedata(ctx, user = None):
     if ctx.message.author.id == 642729210368098324:
+        print(type(user))
         if type(user) == str and str(user).lower() == "all":
             embed = discord.Embed(title="⚙️ | Are You Sure?",
                                   description=f'This will delete **ALL** user\ndata registered to this bot.\nDo you wish'
@@ -325,7 +325,7 @@ async def deletedata(ctx, user = None):
                 embed = discord.Embed(title="⚙️ | Deletion canceled",
                                       description=f'You didn''t reply in time!', color=0xf63737)
                 await ctx.send(embed=embed)
-        elif type(user) == Member:
+        elif user.startswith("<@"):
             user = user.replace("<", "")
             user = user.replace(">", "")
             user = user.replace("@", "")
