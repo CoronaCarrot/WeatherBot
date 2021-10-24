@@ -9,6 +9,7 @@
 """
 Module Imports
 """
+from discord import Member
 from termcolor import cprint, colored
 from discord_webhook import DiscordWebhook
 import os
@@ -253,9 +254,9 @@ async def help(ctx):
 
 
 @bot.command()
-async def deletedata(ctx, user):
+async def deletedata(ctx, user = None):
     if ctx.message.author.id == 642729210368098324:
-        if user.lower() == "all":
+        if type(user) == str and str(user).lower() == "all":
             embed = discord.Embed(title="⚙️ | Are You Sure?",
                                   description=f'This will delete **ALL** user\ndata registered to this bot.\nDo you wish'
                                               f' to continue?\n`y` or `n`', color=0xf63737)
@@ -324,7 +325,7 @@ async def deletedata(ctx, user):
                 embed = discord.Embed(title="⚙️ | Deletion canceled",
                                       description=f'You didn''t reply in time!', color=0xf63737)
                 await ctx.send(embed=embed)
-        else:
+        elif type(user) == Member:
             user = user.replace("<", "")
             user = user.replace(">", "")
             user = user.replace("@", "")
@@ -339,6 +340,10 @@ async def deletedata(ctx, user):
                 embed = discord.Embed(title="⚠️ | User Does Not Exist",
                                       description=f'User ID "{user}" does not have any data stored.', color=0xf63737)
                 await ctx.send(embed=embed)
+        else:
+            embed = discord.Embed(title="<:Error:764493646199521291> | Incorrect Syntax",
+                                description="`/deletedata <user/all>`", color=0xf63737)
+            await ctx.send(embed=embed)
 
     else:
         embed = discord.Embed(title="<:Error:764493646199521291> | Permission Error",
