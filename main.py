@@ -16,6 +16,7 @@ from discordpy_slash.slash import *
 from random import randint
 from achievements import *
 import uuid
+from discord_components import DiscordComponents, Button, Select, SelectOption, ButtonStyle
 
 firstboot = 0
 """
@@ -111,6 +112,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 bot = commands.Bot(command_prefix=[configData["Prefix"], "/"], intents=intents)
+DiscordComponents(bot)
 bot.remove_command("help")
 
 if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
@@ -263,18 +265,17 @@ async def deletedata(ctx, user):
                 return msg.author == ctx.author and msg.channel == ctx.channel and \
                        msg.content.lower() in ["y", "n"]
 
-
             try:
                 msg = await bot.wait_for("message", check=check, timeout=10)  # 10 seconds to reply
                 if msg.content.lower() == "y":
                     if configData["Require Auth Code For High Security Commands"]:
                         try:
                             embed = discord.Embed(title="⚙️ | Detected High Security Command Usage",
-                                                  description=f'Please enter Auth Code\nsent to console', color=0xf63737)
+                                                  description=f'Please enter Auth Code\nsent to console',
+                                                  color=0xf63737)
                             await ctx.send(embed=embed)
                             authcode = uuid.uuid4()
                             print(f'Your auth code is: {authcode}')
-
 
                             def auth_check(msg):
                                 return msg.author == ctx.author and msg.channel == ctx.channel and \
@@ -328,9 +329,7 @@ async def deletedata(ctx, user):
             user = user.replace(">", "")
             user = user.replace("@", "")
             user = user.replace("!", "")
-            file = "./UserData/"
-            file += str(user)
-            file += ".json"
+            file = "./UserData/{0}.json".format(str(user))
             try:
                 os.remove(file)
                 embed = discord.Embed(title="⚙️ | Users Data Deleted",
@@ -485,7 +484,7 @@ async def weather(ctx, location):
                     return user == ctx.message.author and reaction.message.author.bot
 
                 try:
-                    reaction, user = await bot.wait_for('reaction_add', timeout=30.0, check=check)
+                    reaction, user = await bot.wait_for('message_react', timeout=30.0, check=check)
                 except asyncio.TimeoutError:
                     pass
                 else:
