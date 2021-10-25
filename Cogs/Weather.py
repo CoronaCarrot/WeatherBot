@@ -2,7 +2,6 @@ import asyncio
 
 import discord
 import requests
-from discord import Embed
 from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
 from termcolor import colored
@@ -14,11 +13,6 @@ from main import configData, icondata, bot
 class Slash(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
-
-    @cog_ext.cog_slash(name="test")
-    async def _test(self, ctx: SlashContext):
-        embed = Embed(title="Embed Test")
-        await ctx.send(embed=embed)
 
     @cog_ext.cog_slash(name="weather")
     async def weather(self, ctx: SlashContext, location):

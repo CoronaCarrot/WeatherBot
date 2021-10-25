@@ -175,8 +175,8 @@ async def on_ready():
     print(i)
     for filename in i:
         if filename.endswith('.py'):
+            bot.load_extension(f'Cogs.{filename[:-3]}')
             print('Loaded ' + filename)
-            bot.load_extension(f'cogs.{filename[:-3]}')
             continue
     cprint('⚙️Syncing Commands', 'blue')
     await sync_all_commands(bot)
