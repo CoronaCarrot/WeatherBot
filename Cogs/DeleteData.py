@@ -9,18 +9,19 @@ from discord_slash import cog_ext, SlashContext
 from main import configData, bot
 
 
-class Slash(Cog):
+class DeleteData(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @cog_ext.cog_slash(name="deletedata")
     async def _deletedata(self, ctx: SlashContext, user=None):
-        if ctx.message.author.id == 642729210368098324:
+        if ctx.author.id == 642729210368098324:
             if type(user) == str and str(user).lower() == "all":
                 embed = discord.Embed(title="⚙️ | Are You Sure?",
                                       description=f'This will delete **ALL** user\ndata registered to this bot.\nDo you wish'
                                                   f' to continue?\n`y` or `n`', color=0xf63737)
-                await ctx.send(embed=embed)
+                edit = await ctx.send(embed=embed)
+                print(edit)
 
                 def check(msg):
                     return msg.author == ctx.author and msg.channel == ctx.channel and \
@@ -28,13 +29,14 @@ class Slash(Cog):
 
                 try:
                     msg = await bot.wait_for("message", check=check, timeout=10)  # 10 seconds to reply
+                    await msg.delete()
                     if msg.content.lower() == "y":
                         if configData["Require Auth Code For High Security Commands"]:
                             try:
                                 embed = discord.Embed(title="⚙️ | Detected High Security Command Usage",
                                                       description=f'Please enter Auth Code\nsent to console',
                                                       color=0xf63737)
-                                await ctx.send(embed=embed)
+                                await edit.edit(embed=embed)
                                 authcode = uuid.uuid4()
                                 print(f'Your auth code is: {authcode}')
 
@@ -43,6 +45,7 @@ class Slash(Cog):
                                            msg.content.lower() in str(authcode)
 
                                 msg = await bot.wait_for("message", check=auth_check, timeout=10)  # 10 seconds to reply
+                                await msg.delete()
                                 if msg.content.lower() == str(authcode):
                                     directory = "./UserData"
                                     files_in_directory = os.listdir(directory)
@@ -52,17 +55,17 @@ class Slash(Cog):
                                         os.remove(path_to_file)
                                     embed = discord.Embed(title="⚙️ | All User Data Deleted",
                                                           description=f'deleted data for All Users', color=0xf63737)
-                                    await ctx.send(embed=embed)
+                                    await edit.edit(embed=embed)
                                 else:
                                     embed = discord.Embed(title="⚙️ | Command Canceled",
                                                           description=f'You provided an invalid authcode',
                                                           color=0xf63737)
-                                    await ctx.send(embed=embed)
+                                    await edit.send(embed=embed)
 
                             except asyncio.TimeoutError:
                                 embed = discord.Embed(title="⚙️ | Deletion canceled",
                                                       description=f'You didn''t reply in time!', color=0xf63737)
-                                await ctx.send(embed=embed)
+                                await edit.edit(embed=embed)
                         else:
                             directory = "./UserData"
                             files_in_directory = os.listdir(directory)
@@ -114,4 +117,4 @@ class Slash(Cog):
 
 
 def setup(bot: Bot):
-    bot.add_cog(Slash(bot))
+    bot.add_cog(DeleteData(bot))

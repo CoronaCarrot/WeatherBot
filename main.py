@@ -9,10 +9,10 @@
 """
 Module Imports
 """
+import time
 from random import randint
 
-from discord.ext.commands import Bot
-from discord_slash import SlashCommand
+import requests
 from termcolor import cprint, colored
 
 from achievements import *
@@ -112,10 +112,18 @@ intents.members = True
 
 bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True, HelpCommand=False)
 slash = SlashCommand(bot)
-
+"""
+Syncs bots commands on startup
+"""
+i = os.listdir('./Cogs')
+cogs = 0
+for filename in i:
+    if filename.endswith('.py'):
+        bot.load_extension(f'Cogs.{filename[:-3]}')
+        cogs += 1
 
 if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
-        "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
+    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
     if firstboot == 1:
         pass
     else:
@@ -151,6 +159,8 @@ async def on_ready():
         print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
         print(colored("―――――――――――――――", "blue"))  # |
     print()
+    global cogs
+    cprint(f'⚙️Loaded {cogs} Cogs', 'blue')
     cprint('⚙️Accepting Commands', 'blue')  # Sends in console that the bot is now excepting discord commands
     """
     Sets the bots status in discord depending on the information given in the config
@@ -167,20 +177,37 @@ async def on_ready():
         cprint(f'⚙️Set Status To "Listening to {prm}"', 'blue')
     else:
         pass
-    """
-    Syncs bots commands on startup
-    """
-    cprint('⚙️Loading Cogs', 'blue')
-    i = os.listdir('./Cogs')
-    print(i)
-    for filename in i:
-        if filename.endswith('.py'):
-            bot.load_extension(f'Cogs.{filename[:-3]}')
-            print('Loaded ' + filename)
-            continue
-    cprint('⚙️Syncing Commands', 'blue')
-    await sync_all_commands(bot)
 
 
 token = configData["Token"]
-bot.run(token)
+try:
+    request = requests.get("https://youtu.be/dQw4w9WgXcQ", timeout=15)
+    if bot.is_ws_ratelimited():
+        print(colored("―――――――――――――――", "blue"))  # |
+        print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
+        print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
+        print(colored("―――――――――――――――", "blue"))  # |
+        print()
+        print(colored("Cannot start bot. Could be rate limited.", "blue"))
+        exit(0)
+    else:
+        try:
+            bot.run(token)
+        except all:
+            print(colored("―――――――――――――――", "blue"))  # |
+            print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
+            print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
+            print(colored("―――――――――――――――", "blue"))  # |
+            print()
+            print(colored("Cannot start bot. Couldn't detect any possible reasons.", "blue"))
+            exit(0)
+except (requests.ConnectionError, requests.Timeout) as exception:
+    print(colored("―――――――――――――――", "blue"))  # |
+    print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
+    print(colored("   •", "blue"), "version  0.0.1", colored("•", "blue"))  # | and sends version info
+    print(colored("―――――――――――――――", "blue"))  # |
+    print()
+    print(colored(
+        "Cannot start bot.\nYou are either not connected to the internet\nor your ping is so high that it takes more than 15 seconds to load a webpage...\n\nif the cause is option two GET THE FUCK OUT OF MCDONALDS...",
+        "blue"))
+    exit(0)

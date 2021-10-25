@@ -5,14 +5,15 @@ from discord_slash import cog_ext, SlashContext
 from achievements import achievements_logic
 
 
-class Slash(Cog):
+class Achievement(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @cog_ext.cog_slash(name="achievements")
     async def _achievements(self, ctx: SlashContext):
         achlogic = await achievements_logic(ctx)
-        embed = discord.Embed(title="{users}'s Achievements",
+        user = str(ctx.author).split("#")[0]
+        embed = discord.Embed(title=f'{user}\'s Achievements',
                               description=f'All unlocked achievement badges\non this bot. Use `/achievement ID`\nfor sp'
                                           f'ecific achievement information.\n\n{achlogic}',
                               color=0x53b9e4)
@@ -24,4 +25,4 @@ class Slash(Cog):
 
 
 def setup(bot: Bot):
-    bot.add_cog(Slash(bot))
+    bot.add_cog(Achievement(bot))
