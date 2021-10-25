@@ -11,7 +11,7 @@ Module Imports
 """
 from random import randint
 
-from discord import Client
+from discord.ext.commands import Bot
 from discord_slash import SlashCommand
 from termcolor import cprint, colored
 
@@ -110,7 +110,7 @@ intents = discord.Intents.default()
 
 intents.members = True
 
-bot = Client(intents=intents, command_prefix=[configData["Prefix"], "/"])
+bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True, HelpCommand=False)
 slash = SlashCommand(bot)
 
 
