@@ -147,11 +147,15 @@ class DeleteData(Cog):
                                                               description=f'Failed to verify',
                                                               color=0xf63737)
                                         await ctx.send(embed=embed, hidden=True)
+                                        if os.path.exists("QR.png"):
+                                            os.remove("QR.png")
 
                                 except asyncio.TimeoutError:
                                     embed = discord.Embed(title="Deletion canceled",
                                                           description=f'You didn''t reply in time!', color=0xf63737)
                                     await ctx.send(embed=embed, components=[], hidden=True)
+                                    if os.path.exists("QR.png"):
+                                        os.remove("QR.png")
 
                             except asyncio.TimeoutError:
                                 embed = discord.Embed(title="Deletion canceled",
