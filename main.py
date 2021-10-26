@@ -110,8 +110,9 @@ intents = discord.Intents.default()
 
 intents.members = True
 
-bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True, HelpCommand=False)
+bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True)
 slash = SlashCommand(bot)
+
 """
 Syncs bots commands on startup
 """
@@ -161,6 +162,11 @@ async def on_ready():
     print()
     global cogs
     cprint(f'⚙️Loaded {cogs} Cogs', 'blue')
+    try:
+        await slash.sync_all_commands()
+        cprint('⚙️Syncing Commands', 'blue')
+    except discord.errors.HTTPException:
+        cprint('⚙️An Error Occurred During Command Sync - could be a rate limit', 'blue')
     cprint('⚙️Accepting Commands', 'blue')  # Sends in console that the bot is now excepting discord commands
     """
     Sets the bots status in discord depending on the information given in the config

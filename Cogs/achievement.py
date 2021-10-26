@@ -20,8 +20,8 @@ class Achievement(Cog):
         await ctx.send(embed=embed)
 
     @cog_ext.cog_slash(name="achievement")
-    async def _achievement(self, ctx: SlashContext, ID):
-        pass
+    async def _achievement(self, ctx: SlashContext, id):
+        await ctx.send(content=str(id))
 
 
 def setup(bot: Bot):

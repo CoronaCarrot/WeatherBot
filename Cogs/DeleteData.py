@@ -140,7 +140,8 @@ class DeleteData(Cog):
                                         embed = discord.Embed(title="All User Data Deleted",
                                                               description=f'deleted data for All Users', color=0xf63737)
                                         await ctx.send(embed=embed, hidden=True)
-                                        os.remove("QR.png")
+                                        if os.path.exists("QR.png"):
+                                            os.remove("QR.png")
                                     else:
                                         embed = discord.Embed(title="Command Canceled",
                                                               description=f'Failed to verify',

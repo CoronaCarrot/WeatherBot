@@ -17,7 +17,7 @@ class Weather(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="weather")
+    @cog_ext.cog_slash(name="weather", description="Fetch the current forecast of a Town/City")
     async def weather(self, ctx: SlashContext, location):
         print(colored(f'⚠️Executing Command "Weather" For {str(ctx.author)}', "blue"))
         locationr = location.replace(" ", "%20")  # Replace Spaces With The
