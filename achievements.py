@@ -7,19 +7,21 @@ from discord import Intents
 from discord.ext.commands import Bot
 from discord_slash import SlashCommand
 
-if os.path.exists(os.getcwd() + "/config.json"):
-
-    with open("./config.json") as f:
-        configData = json.load(f)
-else:
-    pass
-
 intents = Intents.default()
 
 intents.members = True
 
-bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True, HelpCommand=False)
-slash = SlashCommand(bot)
+if os.path.exists(os.getcwd() + "/config.json"):
+
+    with open("./config.json") as f:
+        configData = json.load(f)
+
+    bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True, HelpCommand=False)
+    slash = SlashCommand(bot, sync_commands=True)
+
+else:
+    bot = Bot(intents=intents, command_prefix=["/"], self_bot=True, HelpCommand=False)
+    slash = SlashCommand(bot)
 
 
 async def achievements_check(ctx, user, wdr, locationresponse):
