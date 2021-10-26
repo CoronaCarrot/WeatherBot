@@ -109,7 +109,7 @@ async def achievements_logic(ctx):
             }
         }
 
-        with open(os.getcwd() + file, 'w+') as f:
+        with open(file, 'w+') as f:
             json.dump(achtemp, f)
 
         with open(file) as f:
