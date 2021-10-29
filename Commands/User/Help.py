@@ -41,7 +41,6 @@ class Help(Cog):
             try:
                 select_ctx: ComponentContext = await wait_for_component(bot, components=[action_row], timeout=30)
                 #await select_ctx.defer(ignore=True)
-                print(select_ctx.selected_options)
                 if select_ctx.selected_options == ['ucmds']:
 
                     select = create_select(

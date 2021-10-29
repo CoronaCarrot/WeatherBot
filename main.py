@@ -15,7 +15,7 @@ from random import randint
 import requests
 from termcolor import cprint, colored
 
-from achievements import *
+from Modules.Core.AchievementData import *
 
 firstboot = 0
 """
@@ -58,7 +58,7 @@ else:
 
 if os.path.exists(os.getcwd() + "/icons.json"):
     with open("./icons.json") as f:
-        icondata = json.load(f)
+        iconData = json.load(f)
 
 else:
     icontemplate = {"1": "<:01:900016260304236565>",
@@ -116,12 +116,19 @@ slash = SlashCommand(bot)
 """
 Syncs bots commands on startup
 """
-i = os.listdir('./Cogs')
+i = os.listdir('Commands')
 cogs = 0
 for filename in i:
     if filename.endswith('.py'):
-        bot.load_extension(f'Cogs.{filename[:-3]}')
+        bot.load_extension(f'Commands.{filename[:-3]}')
         cogs += 1
+    elif os.path.isdir(f'Commands/{filename}'):
+        o = os.listdir(f'Commands/{filename}')
+        for incat in o:
+            if incat.endswith('.py'):
+                cogs += 1
+                bot.load_extension(f'Commands.{filename}.{incat[:-3]}')
+
 
 if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
     "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
@@ -161,7 +168,7 @@ async def on_ready():
         print(colored("―――――――――――――――", "blue"))  # |
     print()
     global cogs
-    cprint(f'⚙️Loaded {cogs} Cogs', 'blue')
+    cprint(f'⚙️Loaded {cogs} Commands', 'blue')
     try:
         await slash.sync_all_commands()
         cprint('⚙️Syncing Commands', 'blue')

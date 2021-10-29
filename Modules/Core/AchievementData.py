@@ -11,9 +11,9 @@ intents = Intents.default()
 
 intents.members = True
 
-if os.path.exists(os.getcwd() + "/config.json"):
+if os.path.exists("../../config.json"):
 
-    with open("./config.json") as f:
+    with open("../../config.json") as f:
         configData = json.load(f)
 
     bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True, HelpCommand=False)
@@ -39,10 +39,14 @@ async def achievements_check(ctx, user, wdr, locationresponse):
             "ID": ctx.author.id,
             "Achievements": {
                 "01": {
+                    "Rarity": "Rare",
+                    "Icon": "<:01:901465545075986513>",
                     "Achieved": False,
                     "Date Achieved": ""
                 },
                 "02": {
+                    "Rarity": "Special",
+                    "Icon": "<:02:901468443314901042>",
                     "Achieved": False,
                     "Date Achieved": ""
                 }
@@ -84,7 +88,7 @@ async def achievements_check(ctx, user, wdr, locationresponse):
         json.dump(achdata, f)
 
 
-async def achievements_logic(ctx):
+async def badge_board(ctx):
     file = "./UserData/{0}.json".format(str(ctx.author.id))
 
     user = bot.get_user(ctx.author.id)
@@ -99,10 +103,14 @@ async def achievements_logic(ctx):
             "ID": ctx.author.id,
             "Achievements": {
                 "01": {
+                    "Rarity": "Rare",
+                    "Icon": "<:01:901465545075986513>",
                     "Achieved": False,
                     "Date Achieved": ""
                 },
                 "02": {
+                    "Rarity": "Special",
+                    "Icon": "<:02:901468443314901042>",
                     "Achieved": False,
                     "Date Achieved": ""
                 }
@@ -115,5 +123,21 @@ async def achievements_logic(ctx):
         with open(file) as f:
             achdata = json.load(f)
 
-    for x in achdata["Achievements"]:
-        print(x)
+    tablec = 0
+    table = ""
+    for (key, value) in achdata["Achievements"].items():
+        tablec += 1
+        if dict(value)["Achieved"]:
+            table = table + str(dict(value)["Icon"])
+        else:
+            if dict(value)["Rarity"] == "Special":
+                table = table + "<:locked_special:901465836433326110>"
+            else:
+                table = table + "<:locked:901491003838591018>"
+        if tablec >= 10:
+            tablec = 0
+            table = table + "\n\n"
+        else:
+            pass
+    return table
+

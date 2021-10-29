@@ -2,16 +2,16 @@ import discord
 from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
 
-from achievements import achievements_logic
+from Modules.Core.AchievementData import badge_board
 
 
 class Achievement(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="achievements")
+    @cog_ext.cog_slash(name="achievements", description="View all your achievement badges")
     async def _achievements(self, ctx: SlashContext):
-        achlogic = await achievements_logic(ctx)
+        achlogic = await badge_board(ctx)
         user = str(ctx.author).split("#")[0]
         embed = discord.Embed(title=f'{user}\'s Achievements',
                               description=f'All unlocked achievement badges\non this bot. Use `/achievement ID`\nfor sp'

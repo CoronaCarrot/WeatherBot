@@ -9,8 +9,8 @@ from discord_slash.model import ButtonStyle
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
 from termcolor import colored
 
-from achievements import achievements_check
-from main import configData, icondata, bot
+from Modules.Core.AchievementData import achievements_check
+from main import configData, iconData, bot
 
 
 class Weather(Cog):
@@ -19,7 +19,6 @@ class Weather(Cog):
 
     @cog_ext.cog_slash(name="weather", description="Fetch the current forecast of a Town/City")
     async def weather(self, ctx: SlashContext, location):
-        print(colored(f'⚠️Executing Command "Weather" For {str(ctx.author)}', "blue"))
         locationr = location.replace(" ", "%20")  # Replace Spaces With The
         apikey = configData["WeatherAPIKey"]  # Pull API Key From Config
         locationsearch = requests.get(
@@ -68,20 +67,20 @@ class Weather(Cog):
                     lube.append("AM")  # |
 
                 if tempc <= 5 or tempf <= 41:  # |
-                    hoc = icondata["31"]  # |
+                    hoc = iconData["31"]  # |
                 else:  # |
-                    hoc = icondata["30"]  # | Checks To See If The Temperature is below 5°C or 41°F
+                    hoc = iconData["30"]  # | Checks To See If The Temperature is below 5°C or 41°F
                 if tempcr <= 5 or tempfr <= 41:  # | Then Sets The Thermometer Emoji To Either Hot Or Cold
-                    hocr = icondata["31"]  # |
+                    hocr = iconData["31"]  # |
                 else:  # |
-                    hocr = icondata["30"]  # |
+                    hocr = iconData["30"]  # |
 
                 if wdr["WeatherIcon"] < 10:  # |
                     pfx = f'0{wdr["WeatherIcon"]}'  # | Pre Formatting For Next Section
                 else:  # | Adds A Zero Before Single Digit Emoji IDs
                     pfx = f'{str(wdr["WeatherIcon"])}'  # |
 
-                icl = icondata[str(wdr["WeatherIcon"])]  # |
+                icl = iconData[str(wdr["WeatherIcon"])]  # |
                 icl = icl.removeprefix(f'<:{pfx}:')  # | Converts A Discord Emoji To A PNG
                 icl = icl.replace(">", "")  # | For The Embed ThumbNail
                 icl = f'https://cdn.discordapp.com/emojis/{icl}.png?size=2048'  # |
@@ -95,15 +94,15 @@ class Weather(Cog):
                 action_row = create_actionrow(*buttons)
 
                 embed = discord.Embed(
-                    title=f'{icondata[str(wdr["WeatherIcon"])]} It Is Currently {wdr["WeatherText"]} In '
+                    title=f'{iconData[str(wdr["WeatherIcon"])]} It Is Currently {wdr["WeatherText"]} In '
                           f'{locationresponse["LocalizedName"]}', color=0x53b9e4)
                 embed.set_thumbnail(url=f'{icl}')
                 embed.add_field(name=f'Temperature', value=f'{hoc} `{tempc}°C`', inline=True)
                 embed.add_field(name=f'Feels Like', value=f'{hocr} `{tempcr}°C`', inline=True)
                 embed.add_field(name=f'_ _', value=f'_ _', inline=True)
 
-                embed.add_field(name="Wind Speeds", value=f'{icondata["32"]} `{wsd} {wsm} km/h`', inline=True)
-                embed.add_field(name="Gusts", value=f'{icondata["32"]} `{gsm} km/h`', inline=True)
+                embed.add_field(name="Wind Speeds", value=f'{iconData["32"]} `{wsd} {wsm} km/h`', inline=True)
+                embed.add_field(name="Gusts", value=f'{iconData["32"]} `{gsm} km/h`', inline=True)
                 embed.add_field(name=f'_ _', value=f'_ _', inline=True)
                 embed.set_footer(
                     text=f'(C) 2021 CoronaCarrot | API Last Updated {lube[0]}:{lube[1]} {lube[3]} '
@@ -111,10 +110,13 @@ class Weather(Cog):
                 embed = await ctx.send(embed=embed, components=[action_row])
                 await achievements_check(ctx, ctx.author.id, wdr, locationresponse)
 
+                def check(msg):
+                    return msg.author == ctx.author and msg.channel == ctx.channel
+
                 unclicked = 0
                 while unclicked == 0:
                     try:
-                        button_ctx: ComponentContext = await wait_for_component(bot, components=action_row, timeout=30)
+                        button_ctx: ComponentContext = await wait_for_component(bot, components=action_row, timeout=30, check=check)
                         """
                             Pieces all the Imperial information into an easy to read discord embed
                             And either edits the Embed (slash command based) or sends a new embed (Prefix Based)
@@ -125,14 +127,14 @@ class Weather(Cog):
                         action_met = create_actionrow(*buttons)
 
                         edit = discord.Embed(
-                            title=f'{icondata[str(wdr["WeatherIcon"])]} It Is Currently {wdr["WeatherText"]} In '
+                            title=f'{iconData[str(wdr["WeatherIcon"])]} It Is Currently {wdr["WeatherText"]} In '
                                   f'{locationresponse["LocalizedName"]}', color=0x53b9e4)
                         edit.set_thumbnail(url=f'{icl}')
                         edit.add_field(name=f'Temperature', value=f'{hoc} `{tempf}°F`', inline=True)
                         edit.add_field(name=f'Feels Like', value=f'{hocr} `{tempfr}°F`', inline=True)
                         edit.add_field(name=f'_ _', value=f'_ _', inline=True)
-                        edit.add_field(name="Wind Speeds", value=f'{icondata["32"]} `{wsd} {wsi} mi/h`', inline=True)
-                        edit.add_field(name="Gusts", value=f'{icondata["32"]}  `{gsi} km/h`', inline=True)
+                        edit.add_field(name="Wind Speeds", value=f'{iconData["32"]} `{wsd} {wsi} mi/h`', inline=True)
+                        edit.add_field(name="Gusts", value=f'{iconData["32"]}  `{gsi} km/h`', inline=True)
                         edit.add_field(name=f'_ _', value=f'_ _', inline=True)
                         edit.set_footer(
                             text=f'(C) 2021 CoronaCarrot | API Last Updated {lube[0]}:{lube[1]} {lube[3]} (GMT)')
