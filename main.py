@@ -22,7 +22,7 @@ firstboot = 0
 Checking to make sure the correct config files exist
 if they do not they are created with default settings
 """
-if os.path.exists(os.getcwd() + "/config.json"):
+if os.path.exists("./config.json"):
 
     with open("./config.json") as f:
         configData = json.load(f)
@@ -32,7 +32,10 @@ else:
         "Token": "YOUR BOT TOKEN",
         "Prefix": "PREFIX HERE",
         "Owner": "OWNER ID HERE",
-        "WeatherAPIKey": "API KEY HERE",
+        "WeatherAPIKey": {
+            "KeyType": "FREE/PREMIUM",
+            "API Key": "API KEY HERE"
+        },
         "Presence": {
             "Type": "watching",
             "Message": "The Weather"
@@ -40,8 +43,8 @@ else:
         "Require Auth Code For High Security Commands": True
     }
 
-    with open(os.getcwd() + "/config.json", "w+") as f:
-        json.dump(configTemplate, f)
+    with open(os.getcwd() + "./config.json", "w+") as f:
+        json.dump(configTemplate, f, indent=4, sort_keys=True)
 
     print(colored("―――――――――――――――", "blue"))  # |
     print(colored("》", "blue"), "    Weather Bot    ", colored("《", "blue"))  # | Sends Bot branding to console
@@ -56,55 +59,40 @@ else:
         configData = json.load(f)
     firstboot = 1
 
-if os.path.exists(os.getcwd() + "/icons.json"):
+if os.path.exists(os.getcwd() + "./icons.json"):
     with open("./icons.json") as f:
         iconData = json.load(f)
 
 else:
-    icontemplate = {"1": "<:01:900016260304236565>",
-                    "2": "<:02:900016260488765491>",
-                    "3": "<:03:900016260551696384>",
-                    "4": "<:04:900016260132253758>",
-                    "5": "<:05:900016260551688242>",
-                    "6": "<:06:900016260543311972>",
-                    "7": "<:07:900016260614594580>",
-                    "8": "<:08:900016260484562954>",
-                    "11": "<:11:900016260480368700>",
-                    "12": "<:12:900016260711063562>",
-                    "13": "<:13:900016260241305641>",
-                    "14": "<:14:900016260107092009>",
-                    "15": "<:15:900016260421677056>",
-                    "16": "<:16:900016260513923082>",
-                    "17": "<:17:900016260652351530>",
-                    "18": "<:18:900016260576845864>",
-                    "19": "<:19:900016260119674962>",
-                    "20": "<:20:900016260451020810>",
-                    "21": "<:21:900016260438425610>",
-                    "22": "<:22:900016260488769586>",
-                    "23": "<:23:900016260635586570>",
-                    "24": "<:24:900016260107100243>",
-                    "25": "<:25:900016260379729962>",
-                    "26": "<:26:900016260455211068>",
-                    "29": "<:29:900016260430049331>",
-                    "30": "<:30:900016260610420747>",
-                    "31": "<:31:900016260392296478>",
-                    "32": "<:32:900016260354560040>",
-                    "33": "<:33:900016260392300555>",
-                    "34": "<:34:900016260383920230>",
-                    "35": "<:35:900016260346179614>",
-                    "36": "<:36:900016260476186636>",
-                    "37": "<:37:900016260107100182>",
-                    "38": "<:38:900016260430065714>",
-                    "39": "<:39:900016262279757844>",
-                    "40": "<:40:900016260337778718>",
-                    "41": "<:41:900016260383903754>",
-                    "42": "<:42:900016260237111347>",
-                    "43": "<:43:900016260279054378>",
-                    "44": "<:44:900016260308402184>"
-                    }
+    icontemplate = {"icons": {
+        "30": "<:30:900016260610420747>",
+        "31": "<:31:900016260392296478>",
+        "32": "<:32:900016260354560040>",
+        "01d": "<:01d:905217837025624084>",
+        "01n": "<:01n:905217837260505178>",
+        "02d": "<:02d:905217837126266961>",
+        "02n": "<:02n:905217837013041222>",
+        "03d": "<:03d:905217837021401149>",
+        "03n": "<:03n:905217836958494761>",
+        "04d": "<:04d:905217837138866176>",
+        "04n": "<:04n:905217836656504883>",
+        "09d": "<:09d:905217837117898762>",
+        "09n": "<:09n:905217836966887424>",
+        "10d": "<:10d:905217836736184341>",
+        "10n": "<:10n:905217837210173470>",
+        "11d": "<:11d:905217836945899590>",
+        "11n": "<:11n:905217836513902653>",
+        "13d": "<:13d:905217836937535498>",
+        "13n": "<:13n:905217836652306443>",
+        "50d": "<:50d:905217837033996308>",
+        "50n": "<:50n:905217837033996338>",
+    },
+                    "descriptions": {
+                        "unset": "unset"
+                    }}
 
-    with open(os.getcwd() + "/icons.json", "w+") as f:
-        json.dump(icontemplate, f)
+    with open(os.getcwd() + "./icons.json", "w+") as f:
+        json.dump(icontemplate, f, indent=4, sort_keys=True)
 
 intents = discord.Intents.default()
 
@@ -116,14 +104,14 @@ slash = SlashCommand(bot)
 """
 Syncs bots commands on startup
 """
-i = os.listdir('Commands')
+i = os.listdir('./Commands')
 cogs = 0
 for filename in i:
     if filename.endswith('.py'):
         bot.load_extension(f'Commands.{filename[:-3]}')
         cogs += 1
-    elif os.path.isdir(f'Commands/{filename}'):
-        o = os.listdir(f'Commands/{filename}')
+    elif os.path.isdir(f'./Commands/{filename}'):
+        o = os.listdir(f'./Commands/{filename}')
         for incat in o:
             if incat.endswith('.py'):
                 cogs += 1
@@ -131,7 +119,7 @@ for filename in i:
 
 
 if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
-    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"] == "API KEY HERE":
+    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"]["API Key"] == "API KEY HERE" or configData["WeatherAPIKey"]["KeyType"] == "FREE/PREMIUM":
     if firstboot == 1:
         pass
     else:

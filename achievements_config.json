@@ -1,0 +1,14 @@
+{
+    "01": {
+        "Description": "Get a temperature of 69\u00b0 Fahrenheit",
+        "Icon": "<:01:901465545075986513>",
+        "Name": "Noice",
+        "Rarity": "Rare"
+    },
+    "02": {
+        "Description": "Fetch the weather of the bots birthplace",
+        "Icon": "<:02:901468443314901042>",
+        "Name": "Birthplace",
+        "Rarity": "Special"
+    }
+}

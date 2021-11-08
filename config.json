@@ -1,1 +1,14 @@
-{"Token": "OTAxNDI5NDI5NDA0ODU2MzIw.YXPvkw.gjTVosiCK6eqOV1-dajkwpre-uU", "Prefix": "+", "Owner": "642729210368098324", "WeatherAPIKey": "gydk3ED8QdwZsg5eGVf4AQGC1tiV6L6o", "Presence": {"Type": "watching", "Message": "The Weather In Beta"}, "Require Auth Code For High Security Commands": true}
+{
+    "Owner": "642729210368098324",
+    "Prefix": "!",
+    "Presence": {
+        "Message": "The Weather In Beta",
+        "Type": "watching"
+    },
+    "Require Auth Code For High Security Commands": true,
+    "Token": "OTAxNDI5NDI5NDA0ODU2MzIw.YXPvkw.gjTVosiCK6eqOV1-dajkwpre-uU",
+    "WeatherAPIKey": {
+        "API Key": "4bd685308958ff3a162c1e1f7e9e1267",
+        "KeyType": "PREMIUM"
+    }
+}

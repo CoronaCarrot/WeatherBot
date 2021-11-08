@@ -79,9 +79,13 @@ class DeleteData(Cog):
                                             return msg.author == ctx.author and msg.channel == ctx.channel and \
                                                    msg.content.lower() in str(authcode)
 
-                                        msg = await bot.wait_for("message", check=auth_check,
-                                                                 timeout=15)  # 10 seconds to reply
-                                        await msg.delete()
+                                        msg = await bot.wait_for("message", check=auth_check, timeout=15)  # 10 seconds to reply
+
+                                        try:
+                                            await msg.delete()
+                                        except discord.errors.Forbidden:
+                                            pass
+
                                         if msg.content.lower() == str(authcode):
                                             verified = True
                                         else:
@@ -100,7 +104,7 @@ class DeleteData(Cog):
                                         qr.add_data(url)
                                         qr.make(fit=True)
                                         img = qr.make_image(fill_color="white", back_color=(47, 49, 54))
-                                        img.save("QR.png")
+                                        img.save(f"QR{ctx.author.id}.png")
 
                                         buttons = [
                                             create_button(style=ButtonStyle.grey, label="Console Auth", emoji="🖥️",
@@ -109,20 +113,23 @@ class DeleteData(Cog):
                                                           custom_id="Google", disabled=True),
                                         ]
                                         action_row = create_actionrow(*buttons)
-                                        file = discord.File("QR.png")
+                                        file = discord.File(f"QR{ctx.author.id}.png")
                                         embed = discord.Embed(title="Waiting For Verification",
                                                               description=f'Please scan the QR code below,\nthen enter the OTP from your phone\n\n**Note**:\n*If you have already scanned you can use old code*',
                                                               color=0xf63737)
-                                        embed.set_image(url="attachment://QR.png")
+                                        embed.set_image(url=f"attachment://QR{ctx.author.id}.png")
                                         await button_ctx.edit_origin(embed=embed, components=[action_row], hidden=True, file=file)
 
                                         def googleauth(msg):
                                             totpa = pyotp.TOTP(f'{secret}')
                                             return msg.author == ctx.author and msg.channel == ctx.channel and msg.content.lower() in str(totpa.now())
 
-                                        msg = await bot.wait_for("message",
-                                                                 timeout=30, check=googleauth)  # 30 seconds to reply
-                                        await msg.delete()
+                                        msg = await bot.wait_for("message", timeout=60, check=googleauth)  # 60 seconds to reply
+
+                                        try:
+                                            await msg.delete()
+                                        except discord.errors.Forbidden:
+                                            pass
 
                                         totp = pyotp.TOTP(f'{secret}')
                                         if msg.content == str(totp.now()):
@@ -140,22 +147,22 @@ class DeleteData(Cog):
                                         embed = discord.Embed(title="All User Data Deleted",
                                                               description=f'deleted data for All Users', color=0xf63737)
                                         await ctx.send(embed=embed, hidden=True)
-                                        if os.path.exists("QR.png"):
-                                            os.remove("QR.png")
+                                        if os.path.exists(f"QR{ctx.author.id}.png"):
+                                            os.remove(f"QR{ctx.author.id}.png")
                                     else:
                                         embed = discord.Embed(title="Command Canceled",
                                                               description=f'Failed to verify',
                                                               color=0xf63737)
                                         await ctx.send(embed=embed, hidden=True)
-                                        if os.path.exists("QR.png"):
-                                            os.remove("QR.png")
+                                        if os.path.exists(f"QR{ctx.author.id}.png"):
+                                            os.remove(f"QR{ctx.author.id}.png")
 
                                 except asyncio.TimeoutError:
                                     embed = discord.Embed(title="Deletion canceled",
                                                           description=f'You didn''t reply in time!', color=0xf63737)
                                     await ctx.send(embed=embed, components=[], hidden=True)
-                                    if os.path.exists("QR.png"):
-                                        os.remove("QR.png")
+                                    if os.path.exists(f"QR{ctx.author.id}.png"):
+                                        os.remove(f"QR{ctx.author.id}.png")
 
                             except asyncio.TimeoutError:
                                 embed = discord.Embed(title="Deletion canceled",
