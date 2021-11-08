@@ -87,7 +87,7 @@ GNU Public License (GPL)
 
 ---
 
-> [weatherbot.github.io](https://weatherbot.github.io) &nbsp;&middot;&nbsp;
+> [Webpage](https://coronacarrot.github.io/WeatherBot/) &nbsp;&middot;&nbsp;
 > GitHub [@CoronaCarrot](https://github.com/CoronaCarrot) &nbsp;&middot;&nbsp;
 > Discord [CoronaCarrot#0001](https://twitter.com/amit_merchant)
 
