@@ -1,0 +1,5 @@
+requests~=2.25.1
+termcolor~=1.1.0
+discord~=1.7.3
+pyotp~=2.6.0
+qrcode~=7.3.1
