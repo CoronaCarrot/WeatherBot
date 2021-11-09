@@ -42,7 +42,7 @@
 
 There are two options to get this bot downloaded for self hosted use.
 
-###Option one
+### Option one
 
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Python](https://www.python.org/downloads/) (which comes with [pip](https://pip.pypa.io/en/stable/)) installed on your computer. From your command line:
 
