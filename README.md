@@ -39,7 +39,11 @@
 * More Soon
 
 ## Installation
-###Option one
+
+There are two ways to get this bot installed for self hosting.
+
+### Option one
+
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Python](https://www.python.org/downloads/) (which comes with [pip](https://pip.pypa.io/en/stable/)) installed on your computer. From your command line:
 
 ```bash
