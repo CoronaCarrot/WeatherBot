@@ -31,11 +31,11 @@ if os.path.exists("achievements_config.json"):
 else:
 
     achtemp = {"01": {
-            "Name": "Noice",
-            "Description": "Get a temperature of 69° Fahrenheit",
-            "Rarity": "Rare",
-            "Icon": "<:01:901465545075986513>"
-        },
+        "Name": "Noice",
+        "Description": "Get a temperature of 69° Fahrenheit",
+        "Rarity": "Rare",
+        "Icon": "<:01:901465545075986513>"
+    },
         "02": {
             "Name": "Birthplace",
             "Description": "Fetch the weather of the bots birthplace",
@@ -43,10 +43,10 @@ else:
             "Icon": "<:02:901468443314901042>"
         },
         "03": {
-            "Description": "Dm the bot. *Why?* *Just... Why?*",
-            "Icon": "<:03:901468444355100682>",
-            "Name": "What a conversation",
-            "Rarity": "Special"
+            "Name": "Ofisially stuput",
+            "Description": "Get 100 errors on the bot",
+            "Rarity": "Uncommon",
+            "Icon": "<:02:901468443314901042>"
         }
     }
 
@@ -70,16 +70,15 @@ async def achievements_check(ctx, user, wdri, wdrm):
 
         usertemp = {
             "ID": ctx.author.id,
+            "Data": {
+                "ErrorCount": 0
+            },
             "Achievements": {
                 "01": {
                     "Achieved": False,
                     "Date Achieved": ""
                 },
                 "02": {
-                    "Achieved": False,
-                    "Date Achieved": ""
-                },
-                "03": {
                     "Achieved": False,
                     "Date Achieved": ""
                 }
@@ -132,6 +131,9 @@ async def badge_board(ctx):
 
         usertemp = {
             "ID": ctx.author.id,
+            "Data": {
+                "ErrorCount": 0
+            },
             "Achievements": {
                 "01": {
                     "Achieved": False,
@@ -167,3 +169,43 @@ async def badge_board(ctx):
         else:
             pass
     return table
+
+
+async def error_ach(ctx):
+    file = "./UserData/{0}.json".format(str(ctx.author.id))
+
+    user = bot.get_user(ctx.author.id)
+    if os.path.exists(os.getcwd() + file):
+
+        with open(file) as f:
+            userdata = json.load(f)
+
+    else:
+
+        usertemp = {
+            "ID": ctx.author.id,
+            "Data": {
+                "ErrorCount": 0
+            },
+            "Achievements": {
+                "01": {
+                    "Achieved": False,
+                    "Date Achieved": ""
+                },
+                "02": {
+                    "Achieved": False,
+                    "Date Achieved": ""
+                }
+            }
+        }
+
+        with open(file, 'w+') as f:
+            json.dump(usertemp, f, indent=4, sort_keys=True)
+
+        with open(file) as f:
+            userdata = json.load(f)
+
+    userdata["Data"]["ErrorCount"] += 1
+
+    with open(os.getcwd() + file, 'w+') as f:
+        json.dump(userdata, f, indent=4, sort_keys=True)

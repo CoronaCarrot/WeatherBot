@@ -10,6 +10,7 @@ from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext, ButtonStyle, ComponentContext
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
 
+from Modules.Core.AchievementData import error_ach
 from main import configData, bot
 
 
@@ -208,6 +209,7 @@ class DeleteData(Cog):
                                           description=f'User ID "{user}" does not have any data stored.',
                                           color=0xf63737)
                     await ctx.send(embed=embed, components=[], hidden=True)
+                    await error_ach(ctx)
             else:
                 embed = discord.Embed(title="<:Error:764493646199521291> | Incorrect Syntax",
                                       description="`/deletedata <user/all>`", color=0xf63737)
@@ -217,6 +219,7 @@ class DeleteData(Cog):
             embed = discord.Embed(title="<:Error:764493646199521291> | Permission Error",
                                   description="Only bot developers can execute this command", color=0xf63737)
             await ctx.send(embed=embed, components=[], hidden=True)
+            await error_ach(ctx)
 
 
 def setup(bot: Bot):

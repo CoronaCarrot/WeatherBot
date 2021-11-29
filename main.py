@@ -30,7 +30,6 @@ if os.path.exists("./config.json"):
 else:
     configTemplate = {
         "Token": "YOUR BOT TOKEN",
-        "Prefix": "PREFIX HERE",
         "Owner": "OWNER ID HERE",
         "WeatherAPIKey": {
             "KeyType": "FREE/PREMIUM",
@@ -87,9 +86,9 @@ else:
         "50d": "<:50d:905217837033996308>",
         "50n": "<:50n:905217837033996338>",
     },
-                    "descriptions": {
-                        "unset": "unset"
-                    }}
+        "descriptions": {
+            "unset": "unset"
+        }}
 
     with open(os.getcwd() + "./icons.json", "w+") as f:
         json.dump(icontemplate, f, indent=4, sort_keys=True)
@@ -98,7 +97,7 @@ intents = discord.Intents.default()
 
 intents.members = True
 
-bot = Bot(intents=intents, command_prefix=[configData["Prefix"], "/"], self_bot=True)
+bot = Bot(intents=intents, command_prefix="/", self_bot=True)
 slash = SlashCommand(bot)
 
 """
@@ -117,9 +116,9 @@ for filename in i:
                 cogs += 1
                 bot.load_extension(f'Commands.{filename}.{incat[:-3]}')
 
-
-if configData["Token"] == "YOUR BOT TOKEN" or configData["Prefix"] == "PREFIX HERE" or configData[
-    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"]["API Key"] == "API KEY HERE" or configData["WeatherAPIKey"]["KeyType"] == "FREE/PREMIUM":
+if configData["Token"] == "YOUR BOT TOKEN" or configData[
+    "Owner"] == "OWNER ID HERE" or configData["WeatherAPIKey"]["API Key"] == "API KEY HERE" or \
+        configData["WeatherAPIKey"]["KeyType"] == "FREE/PREMIUM":
     if firstboot == 1:
         pass
     else:
@@ -180,6 +179,11 @@ async def on_ready():
         pass
 
 
+@bot.event
+async def on_command_error(ctx, error):
+    await error_ach(ctx)
+
+
 token = configData["Token"]
 try:
     request = requests.get("https://youtu.be/dQw4w9WgXcQ", timeout=15)
@@ -209,6 +213,7 @@ except (requests.ConnectionError, requests.Timeout) as exception:
     print(colored("―――――――――――――――", "blue"))  # |
     print()
     print(colored(
-        "Cannot start bot.\nYou are either not connected to the internet\nor your ping is so high that it takes more than 15 seconds to load a webpage...\n\nif the cause is option two GET THE FUCK OUT OF MCDONALDS...",
+        "Cannot start bot.\nYou are either not connected to the internet\nor your ping is so high that it takes more tha"
+        "n 15 seconds to load a webpage...\n\nif the cause is option two GET THE FUCK OUT OF MCDONALDS...",
         "blue"))
     exit(0)

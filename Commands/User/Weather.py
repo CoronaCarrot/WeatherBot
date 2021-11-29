@@ -8,7 +8,7 @@ from discord_slash.model import ButtonStyle
 from discord_slash.utils.manage_components import create_button, create_actionrow, wait_for_component
 from termcolor import colored
 
-from Modules.Core.AchievementData import achievements_check
+from Modules.Core.AchievementData import achievements_check, error_ach
 from main import configData, iconData, bot
 
 
@@ -142,6 +142,7 @@ class Weather(Cog):
                 ior = discord.Embed(title=f"We Couldn't Find This Town/City!",
                                     description="Try Searching For Town/City And Not Country", color=0xea4d65)
                 await ctx.send(embed=ior)
+                await error_ach(ctx)
             else:
                 print(responsejson)
                 print(colored("――――――――――――――――", "blue"))
@@ -158,6 +159,7 @@ class Weather(Cog):
                                                   "more info.", color=0xea4d65)
                 embed.add_field(name=f'Error Code', value=f' `{responsejson["cod"]}`', inline=True)
                 await ctx.send(embed=embed)
+                await error_ach(ctx)
 
 
 def setup(bot: Bot):
