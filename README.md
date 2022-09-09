@@ -18,7 +18,6 @@
     <img src="https://img.shields.io/github/v/release/CoronaCarrot/WeatherBot?display_name=tag"
          alt="Release">
   </a>
-  <a href="https://gitter.im/amitmerchant1990/electron-markdownify"><img src="https://img.shields.io/discord/894518393598799932" alt="Discord"></a>
   <a href="https://saythanks.io/to/CoronaCarrot">
       <img src="https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg" alt="Say Thanks">
   </a>
