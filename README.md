@@ -78,10 +78,6 @@ This discord bot uses the following open source packages:
 - [qrcode (Python Module)](https://github.com/lincolnloop/python-qrcode)
 - Emojis are taken from [OpenWeatherMap](https://openweathermap.org/)
 
-## Related
-
-[WeatherBot](https://cutt.ly/WeatherBot) - Public version of this bot. Hosted by me.
-
 
 ## You may also like...
 
